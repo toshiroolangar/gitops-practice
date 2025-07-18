@@ -1,0 +1,26 @@
+name: CI Workflow
+
+on: 
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container: python:3.9-slim
+    steps:
+      - name: Checkout
+        uses: actions:checkout@v3
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+      - name: Build image
+        run: |
+          BUILD_DATE=$(date +%Y%m%d)
+          docker build -t flask-boilerplate .
+          docker tag flask-boilerplate:${BUILD_DATE}
+          docker image ls
+          
