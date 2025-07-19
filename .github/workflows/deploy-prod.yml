@@ -1,0 +1,51 @@
+# name: Deploy to Production
+
+# env:
+#   SECRET_ACCESS_KEY: ${{ secrets.SECRET_ACCESS_KEY }}
+#   ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY }}
+#   REGION: ${{ secrets.REGION }}
+#   ECR_REPO: ${{ secrets.ECR_REPO }}
+
+# on:
+#   workflow_dispatch:
+#     inputs:
+#       version:
+#         description: 'Version to deploy (commit ID or latest)'
+#         required: true
+#         default: 'latest'
+  
+#   # Optional: Deploy on release creation
+#   release:
+#     types: [published]
+
+# jobs:
+#   deploy:
+#     runs-on: ubuntu-latest
+#     environment: production
+#     steps:
+#       - name: Configure AWS credentials
+#         run: |
+#           aws configure set aws_access_key_id $ACCESS_KEY_ID
+#           aws configure set aws_secret_access_key $SECRET_ACCESS_KEY
+#           aws configure set region $REGION
+      
+#       - name: Deploy to Production ECS
+#         run: |
+#           VERSION=${{ github.event.inputs.version || 'latest' }}
+#           aws ecs update-service --cluster flask-prod-cluster --service flask-prod-service --force-new-deployment
+#           echo "Deploying version $VERSION to production"
+      
+#       - name: Verify deployment
+#         run: |
+#           # Wait for deployment to complete
+#           aws ecs wait services-stable --cluster flask-prod-cluster --services flask-prod-service
+#           echo "Deployment completed and service is stable"
+      
+#       - name: Notify deployment status
+#         if: always()
+#         run: |
+#           if [ ${{ job.status }} == 'success' ]; then
+#             echo "Production deployment completed successfully"
+#           else
+#             echo "Production deployment failed"
+#           fi
