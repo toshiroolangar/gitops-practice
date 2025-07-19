@@ -2,8 +2,8 @@ name: CI Workflow
 
 env:
   SECRET_ACCESS_KEY: ${{ secrets.SECRET_ACCESS_KEY }}
-  ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY }}
-  REGION: ${{ secrets.REGION }}
+  ACCESS_KEY_ID: ${{ secrets.ACCESS_KEY_ID }}
+  REGION: ${{ secrets.AWS_REGION }}
   ECR_REPO: ${{ secrets.ECR_REPO }}
 
 on: 
@@ -37,7 +37,7 @@ jobs:
       - name: Push image to ECR
         run: |
           echo $ACCESS_KEY_ID
-          aws configure set aws_access_key_id $ACCESS_KEY_ID
+          aws configure set aws_access_key_id ${ACCESS_KEY_ID}
           aws configure set aws_secret_access_key $SECRET_ACCESS_KEY
           aws configure set region $REGION
           aws ecr get-login-password --region $REGION | docker login --username AWS --password-stdin $ECR_REPO
