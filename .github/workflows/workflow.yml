@@ -35,18 +35,33 @@ jobs:
           docker build -t flask-boilerplate .
           docker tag flask-boilerplate flask-boilerplate:${COMMIT_ID}
           docker image ls
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: $ACCESS_KEY_ID
+          aws-secret-access-key: $SECRET_ACCESS_KEY
+          aws-region: $REGION
+      # - name: Configure AWS credentials
+      #   uses: aws-actions/configure-aws-credentials@v2
+      #   with:
+      #     aws-access-key-id: ${{ secrets.ACCESS_KEY_ID }}
+      #     aws-secret-access-key: ${{ secrets.SECRET_ACCESS_KEY }}
+      #     aws-region: ${{ secrets.AWS_REGION }}
+      
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
       - name: Push image to ECR
         run: |
-          echo $ACCESS_KEY_ID
-          aws configure set aws_access_key_id $ACCESS_KEY_ID
-          aws configure set aws_secret_access_key $SECRET_ACCESS_KEY
-          aws configure set region $REGION
-          aws ecr get-login-password --region $REGION | docker login --username AWS --password-stdin $ECR_REPO
           COMMIT_ID=${GITHUB_SHA::7}
-          docker tag flask-boilerplate:${COMMIT_ID} $ECR_REPO/flask-boilerplate:${COMMIT_ID}
-          docker tag flask-boilerplate $ECR_REPO/flask-boilerplate:latest
-          docker push $ECR_REPO/flask-boilerplate:${COMMIT_ID}
-          docker push $ECR_REPO/flask-boilerplate:latest
+          ECR_REGISTRY=${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY=${{ secrets.ECR_REPO }}
+          
+          # Tag and push images
+          docker tag flask-boilerplate:${COMMIT_ID} ${ECR_REGISTRY}/${ECR_REPOSITORY}:${COMMIT_ID}
+          docker tag flask-boilerplate ${ECR_REGISTRY}/${ECR_REPOSITORY}:latest
+          docker push ${ECR_REGISTRY}/${ECR_REPOSITORY}:${COMMIT_ID}
+          docker push ${ECR_REGISTRY}/${ECR_REPOSITORY}:latest
       
       # - name: Deploy to ECS
       #   run: |
