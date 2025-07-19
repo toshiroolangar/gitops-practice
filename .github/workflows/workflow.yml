@@ -43,7 +43,7 @@ jobs:
         run: |
           COMMIT_ID=${GITHUB_SHA::7}
           ECR_REGISTRY=${{ steps.login-ecr.outputs.registry }}
-          ECR_REPOSITORY=toshiro/python-images
+          ECR_REPOSITORY=${{ vars.ECR_REPO }}
           
           # Tag and push images
           docker tag flask-boilerplate:${COMMIT_ID} ${ECR_REGISTRY}/${ECR_REPOSITORY}:${COMMIT_ID}
