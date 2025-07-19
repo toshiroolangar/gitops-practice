@@ -8,6 +8,7 @@ on:
  
 jobs:
   build:
+    environment: main
     runs-on: ubuntu-latest
     env:
       SECRET_ACCESS_KEY: ${{ secrets.SECRET_ACCESS_KEY }}
