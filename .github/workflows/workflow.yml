@@ -47,10 +47,8 @@ jobs:
           
           # Tag and push images
           docker tag flask-boilerplate:${COMMIT_ID} ${ECR_REGISTRY}/${ECR_REPOSITORY}:${COMMIT_ID}
-          docker tag flask-boilerplate ${ECR_REGISTRY}/${ECR_REPOSITORY}:latest
           docker push ${ECR_REGISTRY}/${ECR_REPOSITORY}:${COMMIT_ID}
-          docker push ${ECR_REGISTRY}/${ECR_REPOSITORY}:latest
-      
+                
       # - name: Deploy to ECS
       #   run: |
       #     aws ecs update-service --cluster flask-cluster --service flask-service --force-new-deployment
