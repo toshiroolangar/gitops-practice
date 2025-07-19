@@ -1,11 +1,5 @@
 name: CI Workflow
 
-env:
-  SECRET_ACCESS_KEY: ${{ secrets.SECRET_ACCESS_KEY }}
-  ACCESS_KEY_ID: ${{ secrets.ACCESS_KEY_ID }}
-  REGION: ${{ secrets.AWS_REGION }}
-  ECR_REPO: ${{ secrets.ECR_REPO }}
-
 on: 
   push:
     branches: [main]
@@ -15,6 +9,12 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      SECRET_ACCESS_KEY: ${{ secrets.SECRET_ACCESS_KEY }}
+      ACCESS_KEY_ID: ${{ secrets.ACCESS_KEY_ID }}
+      REGION: ${{ secrets.AWS_REGION }}
+      ECR_REPO: ${{ secrets.ECR_REPO }}
+
     steps:
       - name: Checkout
         uses: actions/checkout@v3
