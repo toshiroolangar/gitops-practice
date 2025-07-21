@@ -49,16 +49,16 @@ jobs:
           docker tag flask-boilerplate:${COMMIT_ID} ${ECR_REGISTRY}/${ECR_REPOSITORY}:${COMMIT_ID}
           docker push ${ECR_REGISTRY}/${ECR_REPOSITORY}:${COMMIT_ID}
                 
-      # - name: Deploy to ECS
-      #   run: |
-      #     aws ecs update-service --cluster flask-cluster --service flask-service --force-new-deployment
-      #     echo "Deployment to ECS initiated"
+      - name: Deploy to ECS
+        run: |
+          aws ecs update-service --cluster flask-cluster --service flask-service --force-new-deployment
+          echo "Deployment to ECS initiated"
           
-      # - name: Notify deployment status
-      #   if: always()
-      #   run: |
-      #     if [ ${{ job.status }} == 'success' ]; then
-      #       echo "Deployment completed successfully"
-      #     else
-      #       echo "Deployment failed"
-      #     fi
+      - name: Notify deployment status
+        if: always()
+        run: |
+          if [ ${{ job.status }} == 'success' ]; then
+            echo "Deployment completed successfully"
+          else
+            echo "Deployment failed"
+          fi
